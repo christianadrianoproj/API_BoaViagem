@@ -1,6 +1,6 @@
 package com.christian.api.BoaViagem.domain;
 
-import java.time.LocalDate;
+import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -39,7 +39,7 @@ public class Gasto {
 	private Double valor;
 	
 	@NotNull
-    private LocalDate data;
+    private Date data;
 	
 	@Column(length = 500)
 	private String descricao;
@@ -79,11 +79,11 @@ public class Gasto {
 		this.valor = valor;
 	}
 
-	public LocalDate getData() {
+	public Date getData() {
 		return data;
 	}
 
-	public void setData(LocalDate data) {
+	public void setData(Date data) {
 		this.data = data;
 	}
 

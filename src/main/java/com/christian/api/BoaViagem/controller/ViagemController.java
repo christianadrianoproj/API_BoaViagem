@@ -1,8 +1,8 @@
 package com.christian.api.BoaViagem.controller;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -51,7 +51,7 @@ public class ViagemController {
 	}
 
 	@GetMapping("/ViagensNoPeriodo/{data}/{idusuario}")
-	public List<Viagem> findViagensNoPeriodo(@PathVariable("data") LocalDate data,
+	public List<Viagem> findViagensNoPeriodo(@PathVariable("data") Date data,
 			@PathVariable("idusuario") Integer idusuario) {
 		List<Viagem> lista = repository.findAll(Sort.by("dataPartida"));
 		ArrayList<Viagem> retorno = new ArrayList<Viagem>();
@@ -63,9 +63,9 @@ public class ViagemController {
 				r.setGastos(gastos);
 
 				if (r.getDataChegada() != null) {
-					if ((r.getDataChegada().isAfter(data)) || (r.getDataChegada().isEqual(data))) {
+					if ((r.getDataChegada().after(data)) || (r.getDataChegada().equals(data))) {
 						if (r.getDataPartida() != null) {
-							if ((r.getDataChegada().isBefore(data)) || (r.getDataChegada().isEqual(data))) {
+							if ((r.getDataChegada().after(data)) || (r.getDataChegada().equals(data))) {
 								retorno.add(r);
 							}
 						} else {

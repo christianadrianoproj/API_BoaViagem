@@ -1,6 +1,6 @@
 package com.christian.api.BoaViagem.domain;
 
-import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -39,9 +39,9 @@ public class Viagem {
     private Integer tipoViagem;
     
 	@NotNull
-    private LocalDate dataChegada;
+    private Date dataChegada;
 	
-    private LocalDate dataPartida;
+    private Date dataPartida;
 	
 	@NotNull
 	private Double orcamento;
@@ -96,19 +96,19 @@ public class Viagem {
 		this.tipoViagem = tipoViagem;
 	}
 
-	public LocalDate getDataChegada() {
+	public Date getDataChegada() {
 		return dataChegada;
 	}
 
-	public void setDataChegada(LocalDate dataChegada) {
+	public void setDataChegada(Date dataChegada) {
 		this.dataChegada = dataChegada;
 	}
 
-	public LocalDate getDataPartida() {
+	public Date getDataPartida() {
 		return dataPartida;
 	}
 
-	public void setDataPartida(LocalDate dataPartida) {
+	public void setDataPartida(Date dataPartida) {
 		this.dataPartida = dataPartida;
 	}
 
