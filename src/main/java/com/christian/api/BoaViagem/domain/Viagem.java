@@ -38,7 +38,7 @@ public class Viagem {
 	@NotNull
     private Integer tipoViagem;
     
-	@NotNull
+	/*@NotNull*/
     private Date dataChegada;
 	
     private Date dataPartida;
