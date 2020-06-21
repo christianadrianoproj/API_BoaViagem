@@ -1,8 +1,5 @@
 package com.christian.api.BoaViagem.domain;
 
-import java.util.Date;
-import java.util.List;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -13,6 +10,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
+
+import java.util.List;
 
 /**
 *
@@ -38,10 +37,12 @@ public class Viagem {
 	@NotNull
     private Integer tipoViagem;
     
-	/*@NotNull*/
-    private Date dataChegada;
+	@NotNull
+	@Column(length = 20)
+    private String dataChegada;
 	
-    private Date dataPartida;
+	@Column(length = 20)
+    private String dataPartida;
 	
 	@NotNull
 	private Double orcamento;
@@ -96,19 +97,19 @@ public class Viagem {
 		this.tipoViagem = tipoViagem;
 	}
 
-	public Date getDataChegada() {
+	public String getDataChegada() {
 		return dataChegada;
 	}
 
-	public void setDataChegada(Date dataChegada) {
+	public void setDataChegada(String dataChegada) {
 		this.dataChegada = dataChegada;
 	}
 
-	public Date getDataPartida() {
+	public String getDataPartida() {
 		return dataPartida;
 	}
 
-	public void setDataPartida(Date dataPartida) {
+	public void setDataPartida(String dataPartida) {
 		this.dataPartida = dataPartida;
 	}
 

@@ -1,5 +1,7 @@
 package com.christian.api.BoaViagem.controller;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Date;
@@ -50,28 +52,44 @@ public class ViagemController {
 		return lista;
 	}
 
+	private Date StringToDate(String dateStr) {
+		try {
+			return (new SimpleDateFormat("dd/MM/yyyy")).parse(dateStr);
+		} catch (ParseException ex) {
+			return null;
+		}
+	}
+
 	@GetMapping("/ViagensNoPeriodo/{data}/{idusuario}")
-	public List<Viagem> findViagensNoPeriodo(@PathVariable("data") Date data,
+	public List<Viagem> findViagensNoPeriodo(@PathVariable("data") String data,
 			@PathVariable("idusuario") Integer idusuario) {
 		List<Viagem> lista = repository.findAll(Sort.by("dataPartida"));
 		ArrayList<Viagem> retorno = new ArrayList<Viagem>();
 
-		for (Viagem r : lista) {
-			if (r.getUsuario().getIdUsuario() == idusuario) {
-				List<Gasto> gastos = r.getGastos();
-				gastos.sort(Comparator.comparing(Gasto::getTipo));
-				r.setGastos(gastos);
+		Date dataFiltro = StringToDate(data);
+		if (dataFiltro != null) {
+			for (Viagem r : lista) {
+				if (r.getUsuario().getIdUsuario() == idusuario) {
+					List<Gasto> gastos = r.getGastos();
+					gastos.sort(Comparator.comparing(Gasto::getTipo));
+					r.setGastos(gastos);
+					if (r.getDataChegada() != null) {
+						Date dataChegada = StringToDate(r.getDataChegada());
+						if (dataChegada != null) {
+							if ((dataChegada.after(dataFiltro)) || (dataChegada.equals(dataFiltro))) {
+								if (r.getDataPartida() != null) {
+									Date dataPartida = StringToDate(r.getDataPartida());
+									if (dataPartida != null) {
+										if ((dataPartida.before(dataFiltro)) || (dataPartida.equals(dataFiltro))) {
+											retorno.add(r);
+										}
+									}
+								} else {
+									retorno.add(r);
+								}
 
-				if (r.getDataChegada() != null) {
-					if ((r.getDataChegada().after(data)) || (r.getDataChegada().equals(data))) {
-						if (r.getDataPartida() != null) {
-							if ((r.getDataChegada().after(data)) || (r.getDataChegada().equals(data))) {
-								retorno.add(r);
 							}
-						} else {
-							retorno.add(r);
 						}
-
 					}
 				}
 			}
