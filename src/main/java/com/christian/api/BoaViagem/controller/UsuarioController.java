@@ -56,7 +56,7 @@ public class UsuarioController {
 	
 	@PostMapping("/autentica")
 	public Usuario validaLogin(@RequestBody Usuario login) {
-		Usuario retorno = null;
+		Usuario retorno = new Usuario();
 		List<Usuario> lista = repository.findAll();
 		for (Usuario l : lista) {
 			if (l.getUserName().equalsIgnoreCase(login.getUserName())) {
@@ -64,8 +64,6 @@ public class UsuarioController {
 					retorno = l;
 				}
 				break;
-			} else {
-				retorno = null;
 			}
 		}
 		return retorno;
