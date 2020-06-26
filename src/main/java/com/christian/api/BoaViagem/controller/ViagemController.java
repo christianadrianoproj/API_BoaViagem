@@ -75,11 +75,11 @@ public class ViagemController {
 		return retorno;
 	}
 
-	@PostMapping("/ValidaPeriodoViagem/{data}")
-	public Viagem ValidaDataViagem(@PathVariable("data") String data, @RequestBody Viagem v) {
+	@PostMapping("/ValidaPeriodoViagem/{idviagem}")
+	public Viagem ValidaDataViagem(@PathVariable("idviagem") Integer idviagem, @RequestBody String data) {
 		Viagem retorno = new Viagem();
 		Date dataFiltro = StringToDate(data);
-		Viagem r = repository.findById(v.getIdViagem()).get();
+		Viagem r = repository.findById(idviagem).get();
 		if (r.getDataChegada() != null) {
 			Date dataChegada = StringToDate(r.getDataChegada());
 			if (dataChegada != null) {
