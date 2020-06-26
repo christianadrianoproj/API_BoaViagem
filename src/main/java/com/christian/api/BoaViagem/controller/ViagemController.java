@@ -76,22 +76,22 @@ public class ViagemController {
 	}
 
 	@PostMapping("/ValidaPeriodoViagem/{data}")
-	public Boolean ValidaDataViagem(@PathVariable("data") String data, @RequestBody Viagem v) {
-		Boolean retorno = false;
+	public Viagem ValidaDataViagem(@PathVariable("data") String data, @RequestBody Viagem v) {
+		Viagem retorno = new Viagem();
 		Date dataFiltro = StringToDate(data);
 		Viagem r = repository.findById(v.getIdViagem()).get();
 		if (r.getDataChegada() != null) {
 			Date dataChegada = StringToDate(r.getDataChegada());
 			if (dataChegada != null) {
 				if ((dataChegada.after(dataFiltro)) || (dataChegada.equals(dataFiltro))) {
-					retorno = true;
+					retorno = r;
 					if (r.getDataPartida() != null) {
 						Date dataPartida = StringToDate(r.getDataPartida());
 						if (dataPartida != null) {
 							if ((dataPartida.before(dataFiltro)) || (dataPartida.equals(dataFiltro))) {
-								retorno = true;
+								retorno = r;
 							} else {
-								retorno = false;
+								retorno = new Viagem();
 							}
 						}
 					}
