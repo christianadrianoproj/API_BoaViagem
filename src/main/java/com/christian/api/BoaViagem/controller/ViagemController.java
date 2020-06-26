@@ -60,40 +60,45 @@ public class ViagemController {
 		}
 	}
 
-	@GetMapping("/ViagensNoPeriodo/{data}/{idusuario}")
-	public List<Viagem> findViagensNoPeriodo(@PathVariable("data") String data,
-			@PathVariable("idusuario") Integer idusuario) {
+	@GetMapping("/ViagensDoUsuario/{idusuario}")
+	public List<Viagem> ViagensDoUsuario(@PathVariable("idusuario") Integer idusuario) {
 		List<Viagem> lista = repository.findAll(Sort.by("dataPartida"));
 		ArrayList<Viagem> retorno = new ArrayList<Viagem>();
+		for (Viagem r : lista) {
+			if (r.getUsuario().getIdUsuario() == idusuario) {
+				List<Gasto> gastos = r.getGastos();
+				gastos.sort(Comparator.comparing(Gasto::getTipo));
+				r.setGastos(gastos);
+				retorno.add(r);
+			}
+		}
+		return retorno;
+	}
 
+	@PostMapping("/ValidaPeriodoViagem/{data}")
+	public Boolean ValidaDataViagem(@PathVariable("data") String data, @RequestBody Viagem v) {
+		Boolean retorno = false;
 		Date dataFiltro = StringToDate(data);
-		if (dataFiltro != null) {
-			for (Viagem r : lista) {
-				if (r.getUsuario().getIdUsuario() == idusuario) {
-					List<Gasto> gastos = r.getGastos();
-					gastos.sort(Comparator.comparing(Gasto::getTipo));
-					r.setGastos(gastos);
-					if (r.getDataChegada() != null) {
-						Date dataChegada = StringToDate(r.getDataChegada());
-						if (dataChegada != null) {
-							if ((dataChegada.after(dataFiltro)) || (dataChegada.equals(dataFiltro))) {
-								if (r.getDataPartida() != null) {
-									Date dataPartida = StringToDate(r.getDataPartida());
-									if (dataPartida != null) {
-										if ((dataPartida.before(dataFiltro)) || (dataPartida.equals(dataFiltro))) {
-											retorno.add(r);
-										}
-									}
-								} else {
-									retorno.add(r);
-								}
-
+		Viagem r = repository.findById(v.getIdViagem()).get();
+		if (r.getDataChegada() != null) {
+			Date dataChegada = StringToDate(r.getDataChegada());
+			if (dataChegada != null) {
+				if ((dataChegada.after(dataFiltro)) || (dataChegada.equals(dataFiltro))) {
+					retorno = true;
+					if (r.getDataPartida() != null) {
+						Date dataPartida = StringToDate(r.getDataPartida());
+						if (dataPartida != null) {
+							if ((dataPartida.before(dataFiltro)) || (dataPartida.equals(dataFiltro))) {
+								retorno = true;
+							} else {
+								retorno = false;
 							}
 						}
 					}
 				}
 			}
 		}
+
 		return retorno;
 	}
 
