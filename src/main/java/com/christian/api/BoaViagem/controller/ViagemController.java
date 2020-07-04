@@ -88,7 +88,7 @@ public class ViagemController {
 	public Viagem ValidaDataViagem(@PathVariable("idviagem") Integer idviagem, @RequestBody String data) {
 		Viagem retorno = new Viagem();
 		System.out.println("Data recebida: " + data);
-		String dataFiltro = formatarData(StringToDate(data));
+		String dataFiltro = formatarData(StringToDate(data.replace('"', ' ').trim()));
 		Viagem r = repository.findById(idviagem).get();
 		if ((r.getDataChegada() != null) && (dataFiltro != null)) {
 			String dataChegada = formatarData(r.getDataChegada());
