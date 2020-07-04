@@ -1,7 +1,5 @@
 package com.christian.api.BoaViagem.controller;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Date;
@@ -52,13 +50,17 @@ public class ViagemController {
 		return lista;
 	}
 
-	private Date StringToDate(String dateStr) {
-		try {
-			return (new SimpleDateFormat("dd/MM/yyyy")).parse(dateStr);
-		} catch (ParseException ex) {
-			return null;
-		}
-	}
+	/*private Date StringToDate(String dateStr) {
+	    Date date = null;
+	    try {
+	        DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+	        date = (java.util.Date)formatter.parse(dateStr);
+	    } catch (ParseException e) {      
+	    	System.out.println("Erro na conversao: " + e.getMessage());
+	    	date = null;
+	    }
+	    return date;
+	}*/
 
 	@GetMapping("/ViagensDoUsuario/{idusuario}")
 	public List<Viagem> ViagensDoUsuario(@PathVariable("idusuario") Integer idusuario) {
@@ -67,7 +69,7 @@ public class ViagemController {
 		for (Viagem r : lista) {
 			if (r.getUsuario().getIdUsuario() == idusuario) {
 				List<Gasto> gastos = r.getGastos();
-				gastos.sort(Comparator.comparing(Gasto::getTipo));
+				gastos.sort(Comparator.comparing(Gasto::getData));
 				r.setGastos(gastos);
 				retorno.add(r);
 			}
@@ -75,18 +77,49 @@ public class ViagemController {
 		return retorno;
 	}
 
-	@PostMapping("/ValidaPeriodoViagem/{idviagem}")
+/*	@PostMapping("/ValidaPeriodoViagem/{idviagem}")
 	public Viagem ValidaDataViagem(@PathVariable("idviagem") Integer idviagem, @RequestBody String data) {
 		Viagem retorno = new Viagem();
+		System.out.println("Data recebida: " + data);
 		Date dataFiltro = StringToDate(data);
+		System.out.println(dataFiltro);
 		Viagem r = repository.findById(idviagem).get();
-		if (r.getDataChegada() != null) {
+		if ((r.getDataChegada() != null) && (dataFiltro != null)) {
 			Date dataChegada = StringToDate(r.getDataChegada());
 			if (dataChegada != null) {
 				if ((dataChegada.after(dataFiltro)) || (dataChegada.equals(dataFiltro))) {
 					retorno = r;
 					if (r.getDataPartida() != null) {
 						Date dataPartida = StringToDate(r.getDataPartida());
+						if (dataPartida != null) {
+							if ((dataPartida.before(dataFiltro)) || (dataPartida.equals(dataFiltro))) {
+								retorno = r;
+							} else {
+								retorno = new Viagem();
+							}
+						}
+					}
+				}
+			}
+		}
+
+		return retorno;
+	}*/
+	
+	@PostMapping("/ValidaPeriodoViagem/{idviagem}")
+	public Viagem ValidaDataViagem(@PathVariable("idviagem") Integer idviagem, @RequestBody Date data) {
+		Viagem retorno = new Viagem();
+		System.out.println("Data recebida: " + data);
+		Date dataFiltro = data;
+		System.out.println(dataFiltro);
+		Viagem r = repository.findById(idviagem).get();
+		if ((r.getDataChegada() != null) && (dataFiltro != null)) {
+			Date dataChegada = r.getDataChegada();
+			if (dataChegada != null) {
+				if ((dataChegada.after(dataFiltro)) || (dataChegada.equals(dataFiltro))) {
+					retorno = r;
+					if (r.getDataPartida() != null) {
+						Date dataPartida = r.getDataPartida();
 						if (dataPartida != null) {
 							if ((dataPartida.before(dataFiltro)) || (dataPartida.equals(dataFiltro))) {
 								retorno = r;

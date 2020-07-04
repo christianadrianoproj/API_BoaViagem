@@ -11,6 +11,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -39,10 +40,10 @@ public class Viagem {
     
 	@NotNull
 	@Column(length = 20)
-    private String dataChegada;
+    private Date dataChegada;
 	
 	@Column(length = 20)
-    private String dataPartida;
+    private Date dataPartida;
 	
 	@NotNull
 	private Double orcamento;
@@ -97,19 +98,19 @@ public class Viagem {
 		this.tipoViagem = tipoViagem;
 	}
 
-	public String getDataChegada() {
+	public Date getDataChegada() {
 		return dataChegada;
 	}
 
-	public void setDataChegada(String dataChegada) {
+	public void setDataChegada(Date dataChegada) {
 		this.dataChegada = dataChegada;
 	}
 
-	public String getDataPartida() {
+	public Date getDataPartida() {
 		return dataPartida;
 	}
 
-	public void setDataPartida(String dataPartida) {
+	public void setDataPartida(Date dataPartida) {
 		this.dataPartida = dataPartida;
 	}
 
