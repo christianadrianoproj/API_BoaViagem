@@ -1,5 +1,8 @@
 package com.christian.api.BoaViagem.controller;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Date;
@@ -50,7 +53,7 @@ public class ViagemController {
 		return lista;
 	}
 
-	/*private Date StringToDate(String dateStr) {
+	private Date StringToDate(String dateStr) {
 	    Date date = null;
 	    try {
 	        DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
@@ -60,7 +63,7 @@ public class ViagemController {
 	    	date = null;
 	    }
 	    return date;
-	}*/
+	}
 
 	@GetMapping("/ViagensDoUsuario/{idusuario}")
 	public List<Viagem> ViagensDoUsuario(@PathVariable("idusuario") Integer idusuario) {
@@ -107,20 +110,24 @@ public class ViagemController {
 	}*/
 	
 	@PostMapping("/ValidaPeriodoViagem/{idviagem}")
-	public Viagem ValidaDataViagem(@PathVariable("idviagem") Integer idviagem, @RequestBody Date data) {
+	public Viagem ValidaDataViagem(@PathVariable("idviagem") Integer idviagem, @RequestBody String data) {
 		Viagem retorno = new Viagem();
 		System.out.println("Data recebida: " + data);
-		Date dataFiltro = data;
-		System.out.println(dataFiltro);
+		//Date dataFiltro = data;
+		Date dataFiltro = StringToDate(data);
 		Viagem r = repository.findById(idviagem).get();
 		if ((r.getDataChegada() != null) && (dataFiltro != null)) {
 			Date dataChegada = r.getDataChegada();
 			if (dataChegada != null) {
+				System.out.println("	dataChegada: " + dataChegada);
+				System.out.println("	dataFiltro: " + dataFiltro);
 				if ((dataChegada.after(dataFiltro)) || (dataChegada.equals(dataFiltro))) {
 					retorno = r;
 					if (r.getDataPartida() != null) {
 						Date dataPartida = r.getDataPartida();
 						if (dataPartida != null) {
+							System.out.println("	dataPartida: " + dataPartida);
+							System.out.println("	dataFiltro: " + dataFiltro);
 							if ((dataPartida.before(dataFiltro)) || (dataPartida.equals(dataFiltro))) {
 								retorno = r;
 							} else {
