@@ -71,7 +71,7 @@ public class ViagemController {
 
 	@GetMapping("/ViagensDoUsuario/{idusuario}")
 	public List<Viagem> ViagensDoUsuario(@PathVariable("idusuario") Integer idusuario) {
-		List<Viagem> lista = repository.findAll(Sort.by("dataPartida"));
+		List<Viagem> lista = repository.findAll(Sort.by("dataChegada"));
 		ArrayList<Viagem> retorno = new ArrayList<Viagem>();
 		for (Viagem r : lista) {
 			if (r.getUsuario().getIdUsuario() == idusuario) {
